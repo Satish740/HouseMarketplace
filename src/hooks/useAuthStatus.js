@@ -17,7 +17,7 @@ function useAuthStatus() {
     
 
     })
-  return {
+  return { 
         loggedIn,
         loading
   }
