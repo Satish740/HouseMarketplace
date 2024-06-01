@@ -155,18 +155,19 @@ function CreateListing() {
         )
       })
     }
-
-    const imgUrls = await Promise.all(
+  
+    const imageUrls = await Promise.all(
       [...images].map((image) => storeImage(image))
-    ).catch(() => {
+    ).catch((error) => {
       setLoading(false)
+      console.log(error)
       toast.error('Images not uploaded')
       return
     })
-
+   
     const formDataCopy = {
       ...formData,
-      imgUrls,
+      imageUrls,
       geolocation,
       timestamp: serverTimestamp(),
     }
@@ -175,11 +176,11 @@ function CreateListing() {
     delete formDataCopy.images
     delete formDataCopy.address
     !formDataCopy.offer && delete formDataCopy.discountedPrice
-
-    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+    
+  const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
     setLoading(false)
     toast.success('Listing saved')
-    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+   navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   }
 
   const onMutate = (e) => {
@@ -370,6 +371,16 @@ function CreateListing() {
                   required
                 />
               </div>
+
+                <div className='profileCard'>
+                I didn't enable geolocation that will automatically fill in the latitude and longitude. 
+                So need to fill in the latitude and longitude manually. So that the location can be displayed on the map.
+                Here's the Link to find the latitude and longitude of the location:  <a href="https://www.latlong.net/" target="_blank" rel="noreferrer" class="button-link">Link</a>
+             
+              
+              </div>
+                
+            
             </div>
           )}
 
