@@ -1,5 +1,5 @@
 import { useEffect,useState } from "react"
-import { useParams } from "react-router-dom"
+
 import { collection,query,where,orderBy,limit,startAfter, getDocs } from "firebase/firestore"
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
@@ -9,7 +9,7 @@ import ListingItems from "../components/ListingItems"
 function Offers() {
   const [listings,setListings]=useState(null)
   const [loading,setLoading]=useState(true)
-  const params=useParams()
+  const [lastFetchedListing,setLastFetchedListing]=useState(null)
 
   useEffect(()=>{
     const fetchListings=async()=>{
@@ -19,6 +19,9 @@ function Offers() {
             const listingsQuery=query(listingsCollection,where('offer','==',true),orderBy('timestamp','desc'),limit(10))
             //Excecuting the query
             const listingsSnapshot=await getDocs(listingsQuery)
+
+            const lastVisible = listingsSnapshot.docs[listingsSnapshot.docs.length-1];
+            setLastFetchedListing(lastVisible)
 
             const listings=[]
             listingsSnapshot.forEach((doc)=>{
@@ -33,6 +36,30 @@ function Offers() {
     }
     fetchListings()
 },[])
+
+
+const fetchMoreListings=async()=>  {
+    try{
+
+    const listingsCollection=collection(db,'listings')  
+    const listingsQuery=query(listingsCollection,where('offer','==',true),startAfter(lastFetchedListing),orderBy('timestamp','desc'),limit(5))
+    //Excecuting the query
+    const listingsSnapshot=await getDocs(listingsQuery)
+
+    const lastVisible = listingsSnapshot.docs[listingsSnapshot.docs.length-1];
+    setLastFetchedListing(lastVisible)
+
+    const listings=[]
+    listingsSnapshot.forEach((doc)=>{
+        listings.push({id:doc.id,data:doc.data()})
+    })
+    setListings((prevState)=>[...prevState,...listings])
+    setLoading(false)
+}
+catch(err){
+    toast.error('Could not fetch the listings!')
+}
+}
     return (
     <div className='category'>
         <header>
@@ -53,7 +80,11 @@ function Offers() {
             }
         </ul>
        </main>
-       
+       <br />
+       <br />
+
+            {lastFetchedListing && <p className="loadMore" onClick={fetchMoreListings}>Load More</p>}
+
        </>:
         <p>
          There are no current Offers

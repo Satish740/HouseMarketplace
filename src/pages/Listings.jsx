@@ -1,21 +1,23 @@
-import {useState,useEffect} from 'react'
-import { MapContainer,Marker,Popup,TileLayer } from 'react-leaflet'
-import { Link, useNavigate,useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
-import {getDoc,doc} from 'firebase/firestore'
+import { getDoc, doc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { db } from '../firebase.config'
-import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
+import { toast } from 'react-toastify'
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
+
 
 function Listings() {
   const [listing,setListing]=useState(null)
   const [loading,setLoading]=useState(true)
   const [shareLinkCopied,setShareLinkCopied]=useState(false)
-
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const params=useParams()
     const navigate=useNavigate()
     const auth=getAuth()
@@ -43,11 +45,34 @@ function Listings() {
     if(loading){
         return <Spinner/>
     }
-
+    const nextImage = () => {
+        setCurrentImageIndex((prevIndex) =>
+          prevIndex === listing.imageUrls.length - 1 ? 0 : prevIndex + 1
+        );
+      };
+    
+      const prevImage = () => {
+        setCurrentImageIndex((prevIndex) =>
+          prevIndex === 0 ? listing.imageUrls.length - 1 : prevIndex - 1
+        );
+      };
 
     return (
 <main>
-{/* Slider */}
+<div className="carousel">
+        <button className="carousel-button left" onClick={prevImage}>
+          &#10094;
+        </button>
+        <div
+          className="carousel-image"
+          style={{
+            backgroundImage: `url(${listing.imageUrls[currentImageIndex]})`,
+          }}
+        ></div>
+        <button className="carousel-button right" onClick={nextImage}>
+          &#10095;
+        </button>
+      </div>
 
 
 <div className="shareIconDiv" onClick={()=>{
