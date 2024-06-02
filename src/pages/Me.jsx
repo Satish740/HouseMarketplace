@@ -21,7 +21,7 @@ function Me() {
             <a href="https://www.linkedin.com/in/satish-jagadish-b2916a167/" target="_blank" rel="noreferrer" className="mr-2 text-2xl">
               <FaLinkedin />
             </a>
-            <a href="http://api.whatsapp.com/send?phone=4146391388&text=Hello, I saw your github profile finder website." target="_blank" rel="noreferrer" className="text-2xl">
+            <a href="http://api.whatsapp.com/send?phone=4146391388&text=Hello, I saw your House MarketPlace website." target="_blank" rel="noreferrer" className="text-2xl">
               <FaWhatsappSquare />
             </a>
           </div>
