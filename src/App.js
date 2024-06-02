@@ -14,7 +14,7 @@ import CreateListing from './pages/CreateListing';
 import Listings from './pages/Listings';
 import Contact from './pages/Contact';
 import EditListing from './pages/EditListing';
-
+import Me from './pages/Me';
 function App() {
   return (
  <>
@@ -35,6 +35,8 @@ function App() {
     <Route path="/category/:categoryName/:listingId" element={<Listings />} />
     <Route path="/contact/:landlordId" element={<Contact />} />
     <Route path="/edit-listing/:listingId" element={<EditListing />} />
+    <Route path="/about" element={<Me/>} />
+
   </Routes>
 
 <Navbar/>
